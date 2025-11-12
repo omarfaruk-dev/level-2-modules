@@ -22,3 +22,9 @@ console.log(userInfo);
 
 // rest info
 
+const sendInvitaton = (...friends: string[]) => {
+    friends.forEach((friend: string) => 
+    console.log(`Send invitation to: ${friend}`))
+}
+
+sendInvitaton('friend1', 'friend2', 'friend3')
