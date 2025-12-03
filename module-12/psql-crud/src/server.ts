@@ -50,7 +50,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')
 })
 
-// USERS CRUD OPERATIONS
+//* USERS CRUD OPERATIONS
 //! Create a new user
 app.post('/users', async (req: Request, res: Response) => {
     const { name, email } = (req.body);
@@ -126,7 +126,7 @@ app.get('/users/:id', async (req: Request, res: Response) => {
 })
 //! Update single users
 app.put('/users/:id', async (req: Request, res: Response) => {
-    const {name, email} = req.body;
+    const { name, email } = req.body;
     try {
         const result = await pool.query(`UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`, [name, email, req.params.id]);
 
@@ -181,6 +181,44 @@ app.delete('/users/:id', async (req: Request, res: Response) => {
     }
 })
 
+//* TODO CRUD OPERATIONS
+//! Create a new todos
+app.post('/todos', async (req: Request, res: Response) => {
+    const { user_id, title } = req.body;
+
+    try {
+        const result = await pool.query(`INSERT INTO todos(user_id, title) VALUES($1, $2) RETURNING *`, [user_id, title]);
+        res.status(201).json({
+            success: true,
+            message: "Todo Created",
+            data: result.rows[0]
+        })
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message,
+            data: err.message,
+        })
+    }
+
+})
+//! Get all todos
+app.get('/todos', async (req: Request, res: Response) => {
+    try {
+        const result = await pool.query(`SELECT * FROM todos`)
+        res.status(201).json({
+            status: true,
+            message: "todos retrive success",
+            data: result.rows[0]
+        })
+    } catch (err: any) {
+        res.status(500).json({
+            message: err.message,
+            data: err
+
+        })
+    }
+})
 
 
 
